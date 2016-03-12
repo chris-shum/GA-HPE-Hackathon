@@ -1,0 +1,2 @@
+include ':hodclient'
+project(':hodclient').projectDir = new File('havenondemand-android-master/hodclient')
