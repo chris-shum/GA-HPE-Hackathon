@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">QuickTap</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_large_display">LargeDisplayActivity</string>
+</resources>
