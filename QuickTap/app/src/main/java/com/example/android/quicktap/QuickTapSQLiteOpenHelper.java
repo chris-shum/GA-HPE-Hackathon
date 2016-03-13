@@ -59,7 +59,7 @@ public class QuickTapSQLiteOpenHelper extends SQLiteOpenHelper {
                 null, // d. selections args
                 null, // e. group by
                 null, // f. having
-                null, // g. order by
+                COL_BEER_COUNT+" DESC", // g. order by
                 null); // h. limit
         return cursor;
     }
@@ -81,12 +81,12 @@ public class QuickTapSQLiteOpenHelper extends SQLiteOpenHelper {
         }
     }
 
-    public String getCountById(int id) {
+    public String getCountByName(String beerName) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(BEER_LIST_TABLE_NAME, // a. table
                 new String[]{COL_BEER_COUNT}, // b. column names
-                COL_ID + " = ?", // c. selections
-                new String[]{String.valueOf(id)}, // d. selections args
+                COL_BEER_NAME + " = ?", // c. selections
+                new String[]{beerName}, // d. selections args
                 null, // e. group by
                 null, // f. having
                 null, // g. order by
@@ -98,12 +98,12 @@ public class QuickTapSQLiteOpenHelper extends SQLiteOpenHelper {
         }
     }
 
-    public String getIdByName(int id) {
+    public String getIdByName(String name) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(BEER_LIST_TABLE_NAME, // a. table
                 new String[]{COL_ID}, // b. column names
                 COL_BEER_NAME + " = ?", // c. selections
-                new String[]{String.valueOf(id)}, // d. selections args
+                new String[]{name}, // d. selections args
                 null, // e. group by
                 null, // f. having
                 null, // g. order by
@@ -129,9 +129,9 @@ public class QuickTapSQLiteOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public void updateDrinkCount(int drinkCount, int id) {
+    public void updateDrinkCount(String drinkCount, String beerName) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String command = ("UPDATE " + BEER_LIST_TABLE_NAME + " SET " + COL_BEER_COUNT + " = " + drinkCount + " WHERE " + COL_ID + " = " + id);
+        String command = ("UPDATE " + BEER_LIST_TABLE_NAME + " SET " + COL_BEER_COUNT + " = " + drinkCount + " WHERE " + COL_BEER_NAME + " = \"" + beerName + "\"");
         db.execSQL(command);
     }
 

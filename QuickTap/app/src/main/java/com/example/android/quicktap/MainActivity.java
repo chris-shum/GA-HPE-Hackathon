@@ -1,13 +1,21 @@
 package com.example.android.quicktap;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import java.io.File;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,13 +25,13 @@ public class MainActivity extends AppCompatActivity {
 
     EditText mMainEditText;
     String mBeerToDisplay;
-    Toolbar mToolbar;
+    Toolbar mBottomToolbar;
     ImageView mToolbarCamera;
     ImageView mToolbarBarcode;
     ImageView mToolbarMicrophone;
     ImageView mToolbarList;
-
-
+    Toolbar mTopToolBar;
+    Window mWindow;
 
 
     @Override
@@ -34,38 +42,57 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         mMainEditText = (EditText) findViewById(R.id.mainActivity_EditText);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar_bottom);
+        mBottomToolbar = (Toolbar) findViewById(R.id.toolbar_bottom);
         setSupportActionBar(toolbar);
-        mToolbar.setContentInsetsAbsolute(0,0);
-
+        mBottomToolbar.setContentInsetsAbsolute(0, 0);
+        mTopToolBar = (Toolbar) findViewById(R.id.toolbar);
+        mTopToolBar.setTitleTextColor(getResources().getColor(R.color.colorIconBorder));
 
         mToolbarCamera = (ImageView) findViewById(R.id.toolbarCamera);
         mToolbarBarcode = (ImageView) findViewById(R.id.toolbarBarcode);
         mToolbarMicrophone = (ImageView) findViewById(R.id.toolbarMicrophone);
         mToolbarList = (ImageView) findViewById(R.id.toolbarList);
 
+        mWindow = this.getWindow();
+        mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                mBeerToDisplay = mMainEditText.getText().toString();
-//                if (mBeerToDisplay.isEmpty()){
-//                    mMainEditText.setError("Please fill in");
-//                    mMainEditText.requestFocus();
-//                }else {
-//                Intent intent = new Intent(MainActivity.this, LargeDisplayActivity.class);
-//                intent.putExtra("BeerToDisplayKey", mBeerToDisplay);
-//                startActivity(intent);
-//                }
-//            }
-//        });
+
+
+        View layout = findViewById(R.id.clickOnContent);
+
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mBeerToDisplay = mMainEditText.getText().toString();
+                if (mBeerToDisplay.isEmpty()) {
+                    mMainEditText.requestFocus();
+                    mMainEditText.setError("Please fill in");
+
+                } else {
+                    Intent intent = new Intent(MainActivity.this, LargeDisplayActivity.class);
+                    intent.putExtra("BeerToDisplayKey", mBeerToDisplay);
+                    startActivity(intent);
+                }
+            }
+        });
 
         mToolbarCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String path = Environment.getExternalStorageDirectory().getPath() + "/QuickTap/Camera/";
+                File file = new File(path,"QuickTap.jpg");
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Uri outputFileUri = Uri.fromFile(file);
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivity(intent);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                Log.d("photo", "path"+file);
+                startActivityForResult(intent, 12345);
             }
         });
 
@@ -77,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
 //    @Override
