@@ -1,1 +1,1 @@
-include ':app', ':hodclient'
+include ':app', ':hodclient', ':hodresponseparser'

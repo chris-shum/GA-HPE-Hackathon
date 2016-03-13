@@ -6,7 +6,7 @@ import java.net.URLEncoder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 /**
  * Created by charlie on 3/12/16.
@@ -18,7 +18,7 @@ public class TestApiCalls {
     public static void main(String[] args) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create())
                 .build();
 
         BreweryDbService service = retrofit.create(BreweryDbService.class);
