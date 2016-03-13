@@ -41,7 +41,6 @@ public class ListActivity extends AppCompatActivity {
         mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
 
         mTopToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mTopToolbar.setTitleTextColor(getResources().getColor(R.color.colorIconBorder));
         setTitle("QuickTap");
 
 

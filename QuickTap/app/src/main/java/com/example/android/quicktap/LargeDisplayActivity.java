@@ -79,7 +79,7 @@ public class LargeDisplayActivity extends AppCompatActivity {
 
                 Uri uri = Uri.parse("smsto:123456789");
                 Intent it = new Intent(Intent.ACTION_SENDTO, uri);
-                it.putExtra("sms_body", "I'd like to order a "+mBeerToDisplay);
+                it.putExtra("sms_body", "I'd like to order a " + mBeerToDisplay);
                 startActivity(it);
             }
         });
@@ -101,8 +101,8 @@ public class LargeDisplayActivity extends AppCompatActivity {
                     mHelper.addDrink(beerNameToAdd, "1");
                 } else {
                     int drinkCount = mHelper.getCountByName(beerNameToAdd);
-                    int mUpdatedCount =  drinkCount + 1;
-                    mHelper.updateDrinkCount(mUpdatedCount, mBeerToDisplay);
+                    int mUpdatedCount = drinkCount + 1;
+                    mHelper.updateDrinkCount(mUpdatedCount, mBeerToDisplay.toUpperCase());
                 }
                 Toast.makeText(LargeDisplayActivity.this, mBeerToDisplay + " has been added!", Toast.LENGTH_SHORT).show();
             }
