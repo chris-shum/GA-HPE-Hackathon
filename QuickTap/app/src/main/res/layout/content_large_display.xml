@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/colorText"
-        android:textSize="85sp"
+        android:textSize="65sp"
         android:gravity="center_horizontal"
         />
 
