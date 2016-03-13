@@ -94,14 +94,13 @@ public class LargeDisplayActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //if then statement.  if beer is already there, add 1 to count, else add beer and count set to 1
-                String beerNameToAdd = mAutoResizeTextView.getText().toString();
+                String beerNameToAdd = mAutoResizeTextView.getText().toString().toUpperCase();
                 Cursor cursor = mHelper.searchBeerList(beerNameToAdd);
                 if (cursor.getCount() == 0) {
                     mHelper.addDrink(beerNameToAdd, "1");
                 } else {
-                    String drinkCount = mHelper.getCountByName(beerNameToAdd);
-                    int count = Integer.parseInt(drinkCount) + 1;
-                    mUpdatedCount = String.valueOf(count);
+                    int drinkCount = mHelper.getCountByName(beerNameToAdd);
+                    int mUpdatedCount =  drinkCount + 1;
                     mHelper.updateDrinkCount(mUpdatedCount, mBeerToDisplay);
                 }
                 Toast.makeText(LargeDisplayActivity.this, mBeerToDisplay + " has been added!", Toast.LENGTH_SHORT).show();

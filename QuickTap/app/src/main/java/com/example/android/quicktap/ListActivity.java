@@ -20,6 +20,7 @@ public class ListActivity extends AppCompatActivity {
 
     QuickTapSQLiteOpenHelper mHelper;
     Window mWindow;
+    CursorAdapter mCursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,8 @@ public class ListActivity extends AppCompatActivity {
 
         setTitle("QuickTap");
 
-        final CursorAdapter cursorAdapter = new CursorAdapter(ListActivity.this, cursor, 0) {
+
+        mCursorAdapter = new CursorAdapter(ListActivity.this, cursor, 0) {
             @Override
             public View newView(Context context, Cursor cursor, ViewGroup parent) {
                 return LayoutInflater.from(context).inflate(R.layout.beer_count_list, parent, false);
@@ -58,7 +60,8 @@ public class ListActivity extends AppCompatActivity {
         };
 
         final ListView listView = (ListView) findViewById(R.id.beerCountListView);
-        listView.setAdapter(cursorAdapter);
+        listView.setAdapter(mCursorAdapter);
+
 
         AdapterView.OnItemLongClickListener longClickListener = new AdapterView.OnItemLongClickListener() {
             @Override
@@ -66,11 +69,20 @@ public class ListActivity extends AppCompatActivity {
                 String itemNameRemove = ((TextView) view.findViewById(R.id.textViewBeerName)).getText().toString();
                 mHelper.removeDrink(itemNameRemove);
                 Cursor cursorInside = mHelper.getBeerList();
-                cursorAdapter.swapCursor(cursorInside);
+                mCursorAdapter.swapCursor(cursorInside);
                 return true;
             }
         };
         listView.setOnItemLongClickListener(longClickListener);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Cursor cursor = mHelper.getBeerList();
+        mCursorAdapter.changeCursor(cursor);
 
     }
 }

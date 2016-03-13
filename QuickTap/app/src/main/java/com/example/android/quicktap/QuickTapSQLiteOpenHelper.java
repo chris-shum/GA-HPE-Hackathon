@@ -81,7 +81,7 @@ public class QuickTapSQLiteOpenHelper extends SQLiteOpenHelper {
         }
     }
 
-    public String getCountByName(String beerName) {
+    public int getCountByName(String beerName) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(BEER_LIST_TABLE_NAME, // a. table
                 new String[]{COL_BEER_COUNT}, // b. column names
@@ -92,9 +92,9 @@ public class QuickTapSQLiteOpenHelper extends SQLiteOpenHelper {
                 null, // g. order by
                 null); // h. limit
         if (cursor.moveToFirst()) {
-            return cursor.getString(cursor.getColumnIndex(COL_BEER_COUNT));
+            return cursor.getInt(cursor.getColumnIndex(COL_BEER_COUNT));
         } else {
-            return "Description not found";
+            return 0;
         }
     }
 
@@ -129,7 +129,7 @@ public class QuickTapSQLiteOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public void updateDrinkCount(String drinkCount, String beerName) {
+    public void updateDrinkCount(int drinkCount, String beerName) {
         SQLiteDatabase db = this.getWritableDatabase();
         String command = ("UPDATE " + BEER_LIST_TABLE_NAME + " SET " + COL_BEER_COUNT + " = " + drinkCount + " WHERE " + COL_BEER_NAME + " = \"" + beerName + "\"");
         db.execSQL(command);

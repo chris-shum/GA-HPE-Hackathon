@@ -1,10 +1,7 @@
 package com.example.android.quicktap;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -83,13 +80,16 @@ public class MainActivity extends AppCompatActivity {
         mToolbarCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String path = Environment.getExternalStorageDirectory().getPath() + "/QuickTap/Camera/";
-                File file = new File(path, "QuickTap.jpg");
-                try {
-                    file.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                File directory = Environment.getExternalStorageDirectory();
+                File imagesDirectory = new File(directory, "/QuickTap/Camera/");
+                imagesDirectory.mkdirs();
+                File file = new File(imagesDirectory, "QuickTap.jpg");
+
+//                try {
+//                    file.createNewFile();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
                 Uri outputFileUri = Uri.fromFile(file);
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
