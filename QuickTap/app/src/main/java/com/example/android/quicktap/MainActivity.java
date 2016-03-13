@@ -26,7 +26,6 @@ import android.widget.Toast;
 import com.example.android.quicktap.BreweryDbApi.Beer;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -40,7 +39,6 @@ public class MainActivity extends AppCompatActivity
     String mBeerToDisplay;
     Toolbar mBottomToolbar;
     ImageView mToolbarCamera;
-    ImageView mToolbarBarcode;
     ImageView mToolbarMicrophone;
     ImageView mToolbarList;
     Toolbar mTopToolBar;
@@ -49,6 +47,7 @@ public class MainActivity extends AppCompatActivity
     AlertDialog mAudioRecordingDialog;
     ProgressBar mProgressBar;
     SpeechSearch mSpeechSearch;
+    ImageView mMainImage;
 
 
     @Override
@@ -58,6 +57,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mMainEditText = (EditText) findViewById(R.id.mainActivity_EditText);
+        mMainImage = (ImageView) findViewById(R.id.mainImage);
+        mMainImage.setImageResource(R.drawable.main);
 
         mBottomToolbar = (Toolbar) findViewById(R.id.toolbar_bottom);
         setSupportActionBar(toolbar);
@@ -67,7 +68,6 @@ public class MainActivity extends AppCompatActivity
 
 
         mToolbarCamera = (ImageView) findViewById(R.id.toolbarCamera);
-        mToolbarBarcode = (ImageView) findViewById(R.id.toolbarBarcode);
         mToolbarMicrophone = (ImageView) findViewById(R.id.toolbarMicrophone);
         mToolbarList = (ImageView) findViewById(R.id.toolbarList);
 
@@ -142,24 +142,10 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        mToolbarBarcode.setOnClickListener(new View.OnClickListener() {
+        mMainImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File directory = Environment.getExternalStorageDirectory();
-                File imagesDirectory = new File(directory, "/QuickTap/Camera/");
-                imagesDirectory.mkdirs();
-                File file = new File(imagesDirectory, "QuickTap.jpg");
-
-//                try {
-//                    file.createNewFile();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-                Uri outputFileUri = Uri.fromFile(file);
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-                Log.d("photo", "path" + file);
-                startActivityForResult(intent, 12345);
+              mMainImage.setVisibility(View.GONE);
             }
         });
 

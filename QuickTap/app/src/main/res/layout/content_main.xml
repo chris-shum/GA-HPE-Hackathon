@@ -13,12 +13,12 @@
     tools:showIn="@layout/activity_main">
 
     <EditText
+        android:id="@+id/mainActivity_EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/mainActivity_EditText"
-        android:textColor="@color/colorText"
         android:hint="Enter beer name. . ."
         android:maxLines="1"
         android:singleLine="true"
-        />
+        android:textColor="@color/colorText"
+        android:textColorHint="@color/colorText" />
 </RelativeLayout>
