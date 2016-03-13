@@ -41,4 +41,5 @@ dependencies {
     compile project(':hodresponseparser')
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
     compile 'com.squareup.retrofit2:converter-jackson:2.0.0-beta4'
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
 }

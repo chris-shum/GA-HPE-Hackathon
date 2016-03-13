@@ -11,6 +11,9 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareButton;
+
 public class LargeDisplayActivity extends AppCompatActivity {
 
     ImageView mFBShare;
@@ -43,6 +46,9 @@ public class LargeDisplayActivity extends AppCompatActivity {
         mHelper = new QuickTapSQLiteOpenHelper(LargeDisplayActivity.this);
 
         mFBShare = (ImageView) findViewById(R.id.toolbarFBShare);
+        ShareLinkContent.Builder builder = new ShareLinkContent.Builder();
+        builder.setContentDescription("Look at this tasty beer");
+            ((ShareButton) findViewById(R.id.fb_share_button)).setShareContent(builder.build());
         mOrder = (ImageView) findViewById(R.id.toolbarOrder);
         mSearch = (ImageView) findViewById(R.id.toolbarSearch);
         mAdd = (ImageView) findViewById(R.id.toolbarAdd);
@@ -69,12 +75,12 @@ public class LargeDisplayActivity extends AppCompatActivity {
         }
 
         mAutoResizeTextView.setText(fixString + mBeerToDisplay + fixString);
-        mFBShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+//        mFBShare.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
 
         mOrder.setOnClickListener(new View.OnClickListener() {
             @Override

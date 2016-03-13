@@ -1,6 +1,5 @@
 package com.example.android.quicktap;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -18,16 +17,17 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
+
 import java.io.File;
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity
         implements SpeechSearch.OnSpeechSearchResultListener {
+
 
     //database
     //camera
@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mMainEditText = (EditText) findViewById(R.id.mainActivity_EditText);

@@ -47,6 +47,11 @@
                 android:background="@color/colorPrimary"
                 android:src="@drawable/ic_facebook" />
 
+            <com.facebook.share.widget.ShareButton
+                android:id="@+id/fb_share_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
             <ImageView
                 android:id="@+id/toolbarOrder"
                 android:layout_width="0dp"
