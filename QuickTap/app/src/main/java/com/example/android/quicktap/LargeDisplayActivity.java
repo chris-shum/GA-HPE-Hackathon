@@ -95,17 +95,24 @@ public class LargeDisplayActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //if then statement.  if beer is already there, add 1 to count, else add beer and count set to 1
-                String beerNameToAdd = mAutoResizeTextView.getText().toString().toUpperCase();
+                String beerNameToAdd = mBeerToDisplay.toUpperCase();
                 Cursor cursor = mHelper.searchBeerList(beerNameToAdd);
                 if (cursor.getCount() == 0) {
                     mHelper.addDrink(beerNameToAdd, "1");
                 } else {
                     int drinkCount = mHelper.getCountByName(beerNameToAdd);
                     int mUpdatedCount = drinkCount + 1;
-                    mHelper.updateDrinkCount(mUpdatedCount, mBeerToDisplay.toUpperCase());
+                    mHelper.updateDrinkCount(mUpdatedCount, beerNameToAdd);
                 }
-                Toast.makeText(LargeDisplayActivity.this, mBeerToDisplay + " has been added!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LargeDisplayActivity.this, beerNameToAdd + " has been added!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(LargeDisplayActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 }
