@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
@@ -17,6 +19,7 @@ import com.example.android.quicktap.setup.DBAssetHelper;
 public class ListActivity extends AppCompatActivity {
 
     QuickTapSQLiteOpenHelper mHelper;
+    Window mWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,13 @@ public class ListActivity extends AppCompatActivity {
 
         mHelper = new QuickTapSQLiteOpenHelper(ListActivity.this);
         final Cursor cursor = mHelper.getBeerList();
+
+        mWindow = this.getWindow();
+        mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+
+        setTitle("QuickTap");
 
         final CursorAdapter cursorAdapter = new CursorAdapter(ListActivity.this, cursor, 0) {
             @Override
@@ -43,7 +53,7 @@ public class ListActivity extends AppCompatActivity {
                 String beerCountString = cursor.getString(cursor.getColumnIndex(QuickTapSQLiteOpenHelper.COL_BEER_COUNT));
 
                 beerName.setText(beerNameString);
-                beerCount.setText("Beer count: " + beerCountString);
+                beerCount.setText("Count: " + beerCountString);
             }
         };
 

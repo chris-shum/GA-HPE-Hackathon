@@ -34,7 +34,9 @@
         <activity
             android:name=".LargeDisplayActivity"
             android:label="@string/title_activity_large_display"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="landscape"
+            />
         <activity android:name=".ListActivity"></activity>
         <activity
             android:name=".AudioCapture"
