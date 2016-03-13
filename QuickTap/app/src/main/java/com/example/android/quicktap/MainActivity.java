@@ -1,10 +1,8 @@
 package com.example.android.quicktap;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -13,6 +11,10 @@ import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
 
+    //database
+    //camera
+    //text
+
     EditText mMainEditText;
     String mBeerToDisplay;
     Toolbar mToolbar;
@@ -20,7 +22,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView mToolbarBarcode;
     ImageView mToolbarMicrophone;
     ImageView mToolbarList;
-    private Uri fileUri;
+
+
 
 
     @Override
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar_bottom);
         setSupportActionBar(toolbar);
+        mToolbar.setContentInsetsAbsolute(0,0);
+
 
         mToolbarCamera = (ImageView) findViewById(R.id.toolbarCamera);
         mToolbarBarcode = (ImageView) findViewById(R.id.toolbarBarcode);
@@ -40,25 +45,34 @@ public class MainActivity extends AppCompatActivity {
         mToolbarList = (ImageView) findViewById(R.id.toolbarList);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mBeerToDisplay = mMainEditText.getText().toString();
+//                if (mBeerToDisplay.isEmpty()){
+//                    mMainEditText.setError("Please fill in");
+//                    mMainEditText.requestFocus();
+//                }else {
+//                Intent intent = new Intent(MainActivity.this, LargeDisplayActivity.class);
+//                intent.putExtra("BeerToDisplayKey", mBeerToDisplay);
+//                startActivity(intent);
+//                }
+//            }
+//        });
+
+        mToolbarCamera.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                mBeerToDisplay = mMainEditText.getText().toString();
-                if (mBeerToDisplay.isEmpty()){
-                    mMainEditText.setError("Please fill in");
-                }else {
-                Intent intent = new Intent(MainActivity.this, LargeDisplayActivity.class);
-                intent.putExtra("BeerToDisplayKey", mBeerToDisplay);
+            public void onClick(View v) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivity(intent);
-                }
             }
         });
 
         mToolbarList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                Intent intent = new Intent(MainActivity.this, ListActivity.class);
                 startActivity(intent);
             }
         });

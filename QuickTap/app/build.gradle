@@ -29,5 +29,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':hodclient')
     //compile project(':hodresponseparser')
+    compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
+
 
 }

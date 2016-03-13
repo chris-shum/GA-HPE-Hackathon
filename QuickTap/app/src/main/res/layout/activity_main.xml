@@ -23,13 +23,13 @@
 
     <include layout="@layout/content_main" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email" />
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|end"-->
+        <!--android:layout_margin="@dimen/fab_margin"-->
+        <!--android:src="@android:drawable/ic_dialog_email" />-->
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_bottom"
@@ -40,34 +40,44 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/colorAccent">
+
 
             <ImageView
                 android:id="@+id/toolbarCamera"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_margin="1dp"
                 android:layout_weight="1"
+                android:background="@color/colorPrimary"
                 android:src="@drawable/ic_camera" />
 
             <ImageView
                 android:id="@+id/toolbarBarcode"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_margin="1dp"
                 android:layout_weight="1"
+                android:background="@color/colorPrimary"
                 android:src="@drawable/ic_barcode" />
 
             <ImageView
                 android:id="@+id/toolbarMicrophone"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_margin="1dp"
                 android:layout_weight="1"
+                android:background="@color/colorPrimary"
                 android:src="@drawable/ic_microphone" />
 
             <ImageView
                 android:id="@+id/toolbarList"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_margin="1dp"
                 android:layout_weight="1"
+                android:background="@color/colorPrimary"
                 android:src="@drawable/ic_list" />
 
 

@@ -47,6 +47,7 @@ public class LargeDisplayActivity extends AppCompatActivity implements AutoResiz
             fixString = DOUBLE_BYTE_SPACE;
         }
         mAutoResizeTextView.setText(fixString + mBeerToDisplay + fixString);
+        mAutoResizeTextView.setTextSize(100);
 
     }
 
