@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity
 
         View layout = findViewById(R.id.clickOnContent);
 
+        /*
         mMainEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -115,6 +116,7 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
         });
+        */
 
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
