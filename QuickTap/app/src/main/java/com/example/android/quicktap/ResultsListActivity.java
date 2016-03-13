@@ -32,10 +32,10 @@ public class ResultsListActivity extends AppCompatActivity {
         DBAssetHelper dbSetup = new DBAssetHelper(ResultsListActivity.this);
         dbSetup.getReadableDatabase();
 
-
-        mSearchId = getIntent().getIntExtra(QuickTapSQLiteOpenHelper.RESULTS_SEARCH_ID, -1);
+        mSearchId = (int) getIntent().getLongExtra(QuickTapSQLiteOpenHelper.RESULTS_SEARCH_ID, -1);
 
         //TODO - handle case where searchId = -1
+        //TODO - also stop making db calls on UI thread
         mHelper = new QuickTapSQLiteOpenHelper(ResultsListActivity.this);
         Cursor cursor = mHelper.getResultsBySearchId(mSearchId);
 
