@@ -48,7 +48,9 @@ public class LargeDisplayActivity extends AppCompatActivity {
         mFBShare = (ImageView) findViewById(R.id.toolbarFBShare);
         ShareLinkContent.Builder builder = new ShareLinkContent.Builder();
         builder.setContentDescription("Look at this tasty beer");
-            ((ShareButton) findViewById(R.id.fb_share_button)).setShareContent(builder.build());
+
+        final ShareButton fbButton = (ShareButton)findViewById(R.id.fb_share_button);
+        fbButton.setShareContent(builder.build());
         mOrder = (ImageView) findViewById(R.id.toolbarOrder);
         mSearch = (ImageView) findViewById(R.id.toolbarSearch);
         mAdd = (ImageView) findViewById(R.id.toolbarAdd);
@@ -75,12 +77,12 @@ public class LargeDisplayActivity extends AppCompatActivity {
         }
 
         mAutoResizeTextView.setText(fixString + mBeerToDisplay + fixString);
-//        mFBShare.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
+        mFBShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fbButton.performClick();
+            }
+        });
 
         mOrder.setOnClickListener(new View.OnClickListener() {
             @Override
