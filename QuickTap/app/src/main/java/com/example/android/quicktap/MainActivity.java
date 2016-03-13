@@ -27,6 +27,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
+
+import java.io.File;
 import com.example.android.quicktap.BreweryDbApi.Beer;
 
 import java.io.File;
@@ -35,6 +38,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements SpeechSearch.OnSpeechSearchResultListener {
+
 
     //database
     //camera
@@ -59,6 +63,9 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mMainEditText = (EditText) findViewById(R.id.mainActivity_EditText);

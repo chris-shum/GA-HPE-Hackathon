@@ -3,4 +3,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_large_display">LargeDisplayActivity</string>
     <string name="audio_capture_activity_label">AudioCapture</string>
+    <string name="facebook_app_id">1673800746225858</string>
+    <string name="fb_key_hash">DYXFzaZcZNpyJX8EQacyX34spss=</string>
 </resources>
