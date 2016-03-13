@@ -5,17 +5,16 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextPaint;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
-public class LargeDisplayActivity extends AppCompatActivity {
+public class LargeDisplayActivity extends AppCompatActivity { // implements AutoResizeTextView.OnTextResizeListener{
 
     String mBeerToDisplay;
-    TextView mBeerToDisplayTextView;
-    int mViewWidth;
-    int mViewHeight;
-    TextPaint mTextPaint;
+//    AutoResizeTextView mAutoResizeTextView;
+    final String DOUBLE_BYTE_SPACE = "\u3000";
+
 
 
     @Override
@@ -25,12 +24,13 @@ public class LargeDisplayActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mBeerToDisplayTextView = (TextView) findViewById(R.id.largeTextTextView);
+//        mAutoResizeTextView = (AutoResizeTextView) findViewById(R.id.autoResizeTextView);
+//        mAutoResizeTextView.resizeText();
+
+
 
         Intent intent = getIntent();
         mBeerToDisplay = intent.getStringExtra("BeerToDisplayKey");
-        mBeerToDisplayTextView.setText(mBeerToDisplay);
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -40,5 +40,18 @@ public class LargeDisplayActivity extends AppCompatActivity {
                 startActivity(intentBack);
             }
         });
+
+        String fixString = "";
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB_MR1
+                && android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+            fixString = DOUBLE_BYTE_SPACE;
+        }
+//        mAutoResizeTextView.setText(fixString + mBeerToDisplay + fixString);
+
     }
+
+//    @Override
+//    public void onTextResize(TextView textView, float oldSize, float newSize) {
+//        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, newSize);
+//    }
 }
