@@ -12,7 +12,9 @@ import com.example.android.quicktap.BreweryDbApi.Response;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import hod.api.hodclient.HODApps;
@@ -36,6 +38,7 @@ public class SpeechSearch implements IHODClientCallback {
     private Context mContext;
     private MediaRecorder mRecorder;
     private static String mFileName = null;
+    private String mQueryText;
     private HODClient hodClient = new HODClient("5bc8beaa-2ff9-4b76-8c62-d5698a2f46bc", this);
 
     public SpeechSearch(Context context) {
@@ -45,7 +48,7 @@ public class SpeechSearch implements IHODClientCallback {
     }
 
     public interface OnSpeechSearchResultListener {
-        void onSpeechSearchResult(String beerName);
+        void onSpeechSearchResult(String queryText, List<Beer> beers);
     }
 
     public void startRecording() {
@@ -99,14 +102,14 @@ public class SpeechSearch implements IHODClientCallback {
             for (SpeechRecognitionResponse.Document doc : speechResponse.document) {
                 stringBuilder.append(doc.content);
             }
-            String transcription = stringBuilder.toString();
-            Log.d(TAG, "speech transcription: " + transcription);
+            mQueryText = stringBuilder.toString();
+            Log.d(TAG, "speech transcription: " + mQueryText);
 
-            if (transcription.length() > 3 && transcription.substring(0, 4).equals("the ")) {
+            if (mQueryText.length() > 3 && mQueryText.substring(0, 4).equals("the ")) {
                 // seems like "the" shows up in the start of the transcription a lot
-                transcription = transcription.substring(4);
+                mQueryText = mQueryText.substring(4);
             }
-            searchBeers(transcription);
+            searchBeers();
         }
     }
 
@@ -126,8 +129,10 @@ public class SpeechSearch implements IHODClientCallback {
         Log.d(TAG, "onErrorOccurred: " + errorMessage);
     }
 
-    public void searchBeers(String query) {
+    public void searchBeers() {
         Log.d(TAG, "searchBeers: starting api call");
+
+        String query = mQueryText;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BEER_BASE_URL)
@@ -150,14 +155,17 @@ public class SpeechSearch implements IHODClientCallback {
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 Log.d(TAG, "onResponse: beer api response received");
 
-                if (response.body().getBeers().size() > 0) {
+                if (response.body().getBeers() != null
+                        && response.body().getBeers().size() > 0) {
                     Beer beer = response.body().getBeers().get(0);
 
                     Log.d(TAG, "beer: " + beer.getDisplayName());
                     Log.d(TAG, "style: " + beer.getStyle().getShortName());
                     Log.d(TAG, "brewery: " + beer.getBrewery().getShortName());
 
-                    ((MainActivity) mContext).onSpeechSearchResult(beer.getDisplayName());
+                    ((MainActivity) mContext).onSpeechSearchResult(mQueryText, response.body().getBeers());
+                } else {
+                    ((MainActivity) mContext).onSpeechSearchResult(mQueryText, new ArrayList<Beer>());
                 }
             }
 
