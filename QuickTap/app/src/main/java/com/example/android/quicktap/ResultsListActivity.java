@@ -1,7 +1,6 @@
 package com.example.android.quicktap;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,21 +17,25 @@ import android.widget.Toast;
 
 import com.example.android.quicktap.setup.DBAssetHelper;
 
-public class SearchListActivity extends AppCompatActivity {
+public class ResultsListActivity extends AppCompatActivity {
 
     QuickTapSQLiteOpenHelper mHelper;
     Window mWindow;
     CursorAdapter mCursorAdapter;
+    int mSearchId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_list);
-        DBAssetHelper dbSetup = new DBAssetHelper(SearchListActivity.this);
+        setContentView(R.layout.activity_results_list);
+        DBAssetHelper dbSetup = new DBAssetHelper(ResultsListActivity.this);
         dbSetup.getReadableDatabase();
 
-        mHelper = new QuickTapSQLiteOpenHelper(SearchListActivity.this);
-        Cursor cursor = mHelper.getSearches();
+        mSearchId = getIntent().getIntExtra(QuickTapSQLiteOpenHelper.RESULTS_SEARCH_ID, -1);
+
+        //TODO - handle case where searchId = -1
+        mHelper = new QuickTapSQLiteOpenHelper(ResultsListActivity.this);
+        Cursor cursor = mHelper.getResultsBySearchId(mSearchId);
 
         mWindow = this.getWindow();
         mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -42,39 +45,40 @@ public class SearchListActivity extends AppCompatActivity {
         setTitle("QuickTap");
 
 
-        mCursorAdapter = new CursorAdapter(SearchListActivity.this, cursor, 0) {
+        mCursorAdapter = new CursorAdapter(ResultsListActivity.this, cursor, 0) {
             @Override
             public View newView(Context context, Cursor cursor, ViewGroup parent) {
+                //TODO - for now just reuse this layout, but later make new one
                 return LayoutInflater.from(context).inflate(R.layout.search_list_item, parent, false);
             }
 
             @Override
             public void bindView(View view, Context context, final Cursor cursor) {
-                TextView queryText = (TextView) view.findViewById(R.id.textViewSearchText);
+                TextView beerNameTextView = (TextView) view.findViewById(R.id.textViewSearchText);
 
-                String searchText = cursor.getString(cursor.getColumnIndex(QuickTapSQLiteOpenHelper.SEARCH_QUERY_TEXT));
-                queryText.setText(searchText);
-
-                final int searchId = cursor.getInt(cursor.getColumnIndex(QuickTapSQLiteOpenHelper.SEARCH_COL_ID));
+                String beerName = cursor.getString(cursor.getColumnIndex(QuickTapSQLiteOpenHelper.RESULTS_BEER_NAME));
+                beerNameTextView.setText(beerName);
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(SearchListActivity.this, ResultsListActivity.class);
-                        intent.putExtra(QuickTapSQLiteOpenHelper.RESULTS_SEARCH_ID, searchId);
-                        startActivity(intent);
+                        //TODO - something...
+                        //save beerName to beer count table
+                        //delete from Results table where searchId = mSearchId
+                        //delete from Search table where id = mSearchId
+                        //go to large text screen
                     }
                 });
             }
         };
 
-        final ListView listView = (ListView) findViewById(R.id.searchListView);
+        final ListView listView = (ListView) findViewById(R.id.resultsListView);
         listView.setAdapter(mCursorAdapter);
 
+        /*
         AdapterView.OnItemLongClickListener longClickListener = new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                //TODO - update to delete searches
                 String itemNameRemove = ((TextView) view.findViewById(R.id.textViewBeerName)).getText().toString();
                 mHelper.removeDrink(itemNameRemove);
                 Cursor cursorInside = mHelper.getBeerList();
@@ -83,6 +87,7 @@ public class SearchListActivity extends AppCompatActivity {
             }
         };
         listView.setOnItemLongClickListener(longClickListener);
+        */
 
     }
 
@@ -90,7 +95,7 @@ public class SearchListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        Cursor cursor = mHelper.getSearches();
+        Cursor cursor = mHelper.getResultsBySearchId(mSearchId);
         mCursorAdapter.changeCursor(cursor);
 
     }

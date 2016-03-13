@@ -178,6 +178,8 @@ public class MainActivity extends AppCompatActivity
             params.gravity = Gravity.CENTER;
             view.setLayoutParams(params);
             snack.show();
+
+            //TODO - launch notification that takes user to Searches list
         } else {
             Toast.makeText(MainActivity.this, "No results. Sorry!", Toast.LENGTH_SHORT).show();
         }

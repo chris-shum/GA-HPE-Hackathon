@@ -40,6 +40,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ListActivity" />
         <activity android:name=".SearchListActivity" />
+        <activity android:name=".ResultsListActivity" />
     </application>
 
 </manifest>

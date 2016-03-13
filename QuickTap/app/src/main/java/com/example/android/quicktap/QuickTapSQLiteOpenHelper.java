@@ -42,7 +42,7 @@ public class QuickTapSQLiteOpenHelper extends SQLiteOpenHelper {
     public static final String RESULTS_COL_ID = "_id";
     public static final String RESULTS_SEARCH_ID = "SEARCH_ID"; // foreign key to search table
     public static final String RESULTS_BEER_NAME = "BEER_NAME";
-    public static final String[] RESULTS_COLUMNS = {RESULTS_COL_ID, RESULTS_BEER_NAME};
+    public static final String[] RESULTS_COLUMNS = {RESULTS_COL_ID, RESULTS_SEARCH_ID, RESULTS_BEER_NAME};
     public static final String CREATE_RESULTS_LIST_TABLE =
             "CREATE TABLE " + RESULTS_LIST_TABLE_NAME + "(" +
                     RESULTS_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
