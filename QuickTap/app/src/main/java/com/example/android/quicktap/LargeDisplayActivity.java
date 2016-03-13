@@ -2,6 +2,7 @@ package com.example.android.quicktap;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +19,6 @@ public class LargeDisplayActivity extends AppCompatActivity {
     ImageView mSearch;
     ImageView mAdd;
     QuickTapSQLiteOpenHelper mHelper;
-    String mUpdatedCount;
     Toolbar mBottomToolbar;
     Toolbar mTopToolbar;
     Window mWindow;
@@ -33,11 +33,10 @@ public class LargeDisplayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_large_display);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-//        mAutoResizeTextView = (AutoResizeTextView) findViewById(R.id.autoResizeTextView);
-//        mAutoResizeTextView.resizeText();
+        mTopToolbar = (Toolbar) findViewById(R.id.toolbarLargeDisplayActivity);
+        setSupportActionBar(mTopToolbar);
+        setTitle("QuickTap");
+        mTopToolbar.setTitleTextColor(getResources().getColor(R.color.colorIconBorder));
 
         mAutoResizeTextView = (AutoResizeTextView) findViewById(R.id.autoResizeTextView);
         mHelper = new QuickTapSQLiteOpenHelper(LargeDisplayActivity.this);
@@ -48,11 +47,9 @@ public class LargeDisplayActivity extends AppCompatActivity {
         mAdd = (ImageView) findViewById(R.id.toolbarAdd);
 
         mBottomToolbar = (Toolbar) findViewById(R.id.toolbar_bottom);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mBottomToolbar);
         mBottomToolbar.setContentInsetsAbsolute(0, 0);
-        mTopToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mTopToolbar.setTitleTextColor(getResources().getColor(R.color.colorIconBorder));
-        setTitle("QuickTap");
+
 
         mWindow = this.getWindow();
         mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -80,6 +77,10 @@ public class LargeDisplayActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Uri uri = Uri.parse("smsto:123456789");
+                Intent it = new Intent(Intent.ACTION_SENDTO, uri);
+                it.putExtra("sms_body", "I'd like to order a "+mBeerToDisplay);
+                startActivity(it);
             }
         });
 

@@ -1,6 +1,5 @@
 package com.example.android.quicktap;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -14,13 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.quicktap.BreweryDbApi.Beer;
@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity
         mTopToolBar = (Toolbar) findViewById(R.id.toolbar);
         mTopToolBar.setTitleTextColor(getResources().getColor(R.color.colorIconBorder));
 
+
         mToolbarCamera = (ImageView) findViewById(R.id.toolbarCamera);
         mToolbarBarcode = (ImageView) findViewById(R.id.toolbarBarcode);
         mToolbarMicrophone = (ImageView) findViewById(R.id.toolbarMicrophone);
@@ -79,6 +80,30 @@ public class MainActivity extends AppCompatActivity
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         View layout = findViewById(R.id.clickOnContent);
+
+        mMainEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    switch (actionId) {
+                        case KeyEvent.KEYCODE_ENTER:
+                            mBeerToDisplay = mMainEditText.getText().toString();
+                            if (mBeerToDisplay.isEmpty()) {
+                                mMainEditText.requestFocus();
+                                mMainEditText.setError("Please fill in");
+                            } else {
+                                Intent intent = new Intent(MainActivity.this, LargeDisplayActivity.class);
+                                intent.putExtra("BeerToDisplayKey", mBeerToDisplay);
+                                startActivity(intent);
+                            }
+                            return true;
+                        default:
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
 
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +122,27 @@ public class MainActivity extends AppCompatActivity
         });
 
         mToolbarCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File directory = Environment.getExternalStorageDirectory();
+                File imagesDirectory = new File(directory, "/QuickTap/Camera/");
+                imagesDirectory.mkdirs();
+                File file = new File(imagesDirectory, "QuickTap.jpg");
+
+//                try {
+//                    file.createNewFile();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+                Uri outputFileUri = Uri.fromFile(file);
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                Log.d("photo", "path" + file);
+                startActivityForResult(intent, 12345);
+            }
+        });
+
+        mToolbarBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 File directory = Environment.getExternalStorageDirectory();

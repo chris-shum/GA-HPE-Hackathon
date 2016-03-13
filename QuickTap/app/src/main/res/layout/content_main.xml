@@ -18,5 +18,7 @@
         android:id="@+id/mainActivity_EditText"
         android:textColor="@color/colorText"
         android:hint="Enter beer name. . ."
+        android:maxLines="1"
+        android:singleLine="true"
         />
 </RelativeLayout>
