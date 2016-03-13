@@ -38,10 +38,6 @@
             android:screenOrientation="landscape"
             />
         <activity android:name=".ListActivity"></activity>
-        <activity
-            android:name=".AudioCapture"
-            android:label="@string/audio_capture_activity_label"
-            android:theme="@style/AppTheme.NoActionBar" />
 
     </application>
 

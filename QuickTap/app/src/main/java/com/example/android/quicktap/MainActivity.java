@@ -1,6 +1,7 @@
 package com.example.android.quicktap;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -8,19 +9,27 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements SpeechSearch.OnSpeechSearchResultListener {
 
     //database
     //camera
@@ -35,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
     ImageView mToolbarList;
     Toolbar mTopToolBar;
     Window mWindow;
+    CoordinatorLayout mCoordinatorLayout;
+    AlertDialog mAudioRecordingDialog;
+    ProgressBar mProgressBar;
+    SpeechSearch mSpeechSearch;
 
 
     @Override
@@ -61,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
 
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         View layout = findViewById(R.id.clickOnContent);
 
@@ -109,10 +124,50 @@ public class MainActivity extends AppCompatActivity {
         mToolbarMicrophone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AudioCapture.class);
-                startActivity(intent);
+                mSpeechSearch = new SpeechSearch(MainActivity.this);
+
+                mAudioRecordingDialog = new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Say beer name")
+                        .setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // this triggers call to speech recognition api
+                                mSpeechSearch.stopRecording();
+                                // when that completes, it triggers call to beer api
+                                // when that completes, it calls onSpeechSearchResult() below
+
+                                mProgressBar.setVisibility(View.VISIBLE);
+                            }
+                        })
+                        .create();
+
+                mAudioRecordingDialog.show();
+                mSpeechSearch.startRecording();
             }
         });
+    }
+
+    @Override
+    public void onSpeechSearchResult(final String beerName) {
+        mSpeechSearch.release();
+        mSpeechSearch = null;
+
+        mProgressBar.setVisibility(View.GONE);
+
+        Snackbar snack = Snackbar.make(mCoordinatorLayout, "Search completed", Snackbar.LENGTH_LONG)
+                .setAction("View Search Results", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //TODO - go to search results approval activity once it exists
+                        Toast.makeText(MainActivity.this, beerName, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        View view = snack.getView();
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) view.getLayoutParams();
+        params.gravity = Gravity.CENTER;
+        view.setLayoutParams(params);
+        snack.show();
     }
 
 
