@@ -1,9 +1,11 @@
 package com.example.android.quicktap;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ public class ListActivity extends AppCompatActivity {
     QuickTapSQLiteOpenHelper mHelper;
     Window mWindow;
     CursorAdapter mCursorAdapter;
+    Toolbar mTopToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,8 @@ public class ListActivity extends AppCompatActivity {
         mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
 
+        mTopToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mTopToolbar.setTitleTextColor(getResources().getColor(R.color.colorIconBorder));
         setTitle("QuickTap");
 
 
@@ -61,6 +66,17 @@ public class ListActivity extends AppCompatActivity {
 
         final ListView listView = (ListView) findViewById(R.id.beerCountListView);
         listView.setAdapter(mCursorAdapter);
+
+        AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String beerName = ((TextView) view.findViewById(R.id.textViewBeerName)).getText().toString();
+                Intent intent = new Intent(ListActivity.this, LargeDisplayActivity.class);
+                intent.putExtra("BeerToDisplayKey", beerName);
+                startActivity(intent);
+            }
+        };
+        listView.setOnItemClickListener(onItemClickListener);
 
 
         AdapterView.OnItemLongClickListener longClickListener = new AdapterView.OnItemLongClickListener() {
