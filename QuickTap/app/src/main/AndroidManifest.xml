@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>uto-merging QuickTap/app/build.gradle
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.android.quicktap">
 
@@ -9,6 +10,7 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
