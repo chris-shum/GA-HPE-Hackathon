@@ -13,10 +13,11 @@ import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.quicktap.setup.DBAssetHelper;
 
-public class ListActivity extends AppCompatActivity {
+public class SearchListActivity extends AppCompatActivity {
 
     QuickTapSQLiteOpenHelper mHelper;
     Window mWindow;
@@ -26,11 +27,11 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        DBAssetHelper dbSetup = new DBAssetHelper(ListActivity.this);
+        DBAssetHelper dbSetup = new DBAssetHelper(SearchListActivity.this);
         dbSetup.getReadableDatabase();
 
-        mHelper = new QuickTapSQLiteOpenHelper(ListActivity.this);
-        Cursor cursor = mHelper.getBeerList();
+        mHelper = new QuickTapSQLiteOpenHelper(SearchListActivity.this);
+        Cursor cursor = mHelper.getSearches();
 
         mWindow = this.getWindow();
         mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -40,22 +41,27 @@ public class ListActivity extends AppCompatActivity {
         setTitle("QuickTap");
 
 
-        mCursorAdapter = new CursorAdapter(ListActivity.this, cursor, 0) {
+        mCursorAdapter = new CursorAdapter(SearchListActivity.this, cursor, 0) {
             @Override
             public View newView(Context context, Cursor cursor, ViewGroup parent) {
-                return LayoutInflater.from(context).inflate(R.layout.beer_count_list, parent, false);
+                return LayoutInflater.from(context).inflate(R.layout.search_list_item, parent, false);
             }
 
             @Override
             public void bindView(View view, Context context, final Cursor cursor) {
-                TextView beerName = (TextView) view.findViewById(R.id.textViewBeerName);
-                TextView beerCount = (TextView) view.findViewById(R.id.textViewBeerCount);
+                TextView queryText = (TextView) view.findViewById(R.id.textViewSearchText);
 
-                String beerNameString = cursor.getString(cursor.getColumnIndex(QuickTapSQLiteOpenHelper.COL_BEER_NAME));
-                String beerCountString = cursor.getString(cursor.getColumnIndex(QuickTapSQLiteOpenHelper.COL_BEER_COUNT));
+                String searchText = cursor.getString(cursor.getColumnIndex(QuickTapSQLiteOpenHelper.SEARCH_QUERY_TEXT));
+                queryText.setText(searchText);
 
-                beerName.setText(beerNameString);
-                beerCount.setText("Count: " + beerCountString);
+                final int searchId = cursor.getInt(cursor.getColumnIndex(QuickTapSQLiteOpenHelper.SEARCH_COL_ID));
+
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(SearchListActivity.this, "searchId: " + searchId, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         };
 
@@ -80,7 +86,7 @@ public class ListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        Cursor cursor = mHelper.getBeerList();
+        Cursor cursor = mHelper.getSearches();
         mCursorAdapter.changeCursor(cursor);
 
     }

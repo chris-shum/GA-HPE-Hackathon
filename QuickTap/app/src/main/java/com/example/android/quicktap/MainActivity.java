@@ -23,8 +23,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.android.quicktap.BreweryDbApi.Beer;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements SpeechSearch.OnSpeechSearchResultListener {
@@ -149,26 +152,35 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSpeechSearchResult(final String beerName) {
+    public void onSpeechSearchResult(String queryText, final List<Beer> beers) {
         mSpeechSearch.release();
         mSpeechSearch = null;
 
         mProgressBar.setVisibility(View.GONE);
 
-        Snackbar snack = Snackbar.make(mCoordinatorLayout, "Search completed", Snackbar.LENGTH_LONG)
-                .setAction("View Search Results", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //TODO - go to search results approval activity once it exists
-                        Toast.makeText(MainActivity.this, beerName, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        if (beers.size() > 0) {
+            QuickTapSQLiteOpenHelper helper = QuickTapSQLiteOpenHelper.getInstance(MainActivity.this);
+            long searchId = helper.addSearch(queryText);
+            for (Beer beer : beers) {
+                helper.addResult((int) searchId, beer.getDisplayName());
+            }
+            Snackbar snack = Snackbar.make(mCoordinatorLayout, "Search completed", Snackbar.LENGTH_LONG)
+                    .setAction("View Search Results", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(MainActivity.this, SearchListActivity.class);
+                            startActivity(intent);
+                        }
+                    });
 
-        View view = snack.getView();
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) view.getLayoutParams();
-        params.gravity = Gravity.CENTER;
-        view.setLayoutParams(params);
-        snack.show();
+            View view = snack.getView();
+            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) view.getLayoutParams();
+            params.gravity = Gravity.CENTER;
+            view.setLayoutParams(params);
+            snack.show();
+        } else {
+            Toast.makeText(MainActivity.this, "No results. Sorry!", Toast.LENGTH_SHORT).show();
+        }
     }
 
 

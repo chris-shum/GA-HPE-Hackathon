@@ -1,10 +1,12 @@
 package com.example.android.quicktap;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by ShowMe on 3/12/16.
@@ -12,9 +14,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class QuickTapSQLiteOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = QuickTapSQLiteOpenHelper.class.getCanonicalName();
 
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
     public static final String DATABASE_NAME = "QUICKTAP_DB";
     public static final String BEER_LIST_TABLE_NAME = "BEER_LIST";
+    public static final String SEARCH_LIST_TABLE_NAME = "SEARCH_LIST";
+    public static final String RESULTS_LIST_TABLE_NAME = "RESULTS_LIST";
 
     public static final String COL_ID = "_id";
     public static final String COL_BEER_NAME = "BEER_NAME";
@@ -26,6 +30,24 @@ public class QuickTapSQLiteOpenHelper extends SQLiteOpenHelper {
                     COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COL_BEER_NAME + " TEXT, " +
                     COL_BEER_COUNT + " TEXT)";
+
+    public static final String SEARCH_COL_ID = "_id";
+    public static final String SEARCH_QUERY_TEXT = "QUERY_TEXT";
+    public static final String[] SEARCH_COLUMNS = {SEARCH_COL_ID, SEARCH_QUERY_TEXT};
+    public static final String CREATE_SEARCH_LIST_TABLE =
+            "CREATE TABLE " + SEARCH_LIST_TABLE_NAME + "(" +
+                    SEARCH_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    SEARCH_QUERY_TEXT + " TEXT)";
+
+    public static final String RESULTS_COL_ID = "_id";
+    public static final String RESULTS_SEARCH_ID = "SEARCH_ID"; // foreign key to search table
+    public static final String RESULTS_BEER_NAME = "BEER_NAME";
+    public static final String[] RESULTS_COLUMNS = {RESULTS_COL_ID, RESULTS_BEER_NAME};
+    public static final String CREATE_RESULTS_LIST_TABLE =
+            "CREATE TABLE " + RESULTS_LIST_TABLE_NAME + "(" +
+                    RESULTS_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    RESULTS_SEARCH_ID + " INTEGER, " +
+                    RESULTS_BEER_NAME + " TEXT)";
 
     private static QuickTapSQLiteOpenHelper mInstance;
 
@@ -43,6 +65,8 @@ public class QuickTapSQLiteOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_BEER_LIST_TABLE);
+        db.execSQL(CREATE_SEARCH_LIST_TABLE);
+        db.execSQL(CREATE_RESULTS_LIST_TABLE);
     }
 
     @Override
@@ -150,5 +174,51 @@ public class QuickTapSQLiteOpenHelper extends SQLiteOpenHelper {
         String[] selectionArgs = {name};
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete("BEER_LIST", selection, selectionArgs);
+    }
+
+    public long addSearch(String queryText) {
+        ContentValues values = new ContentValues();
+        values.put(SEARCH_QUERY_TEXT, queryText);
+        SQLiteDatabase db = this.getWritableDatabase();
+        long returnId = db.insert(SEARCH_LIST_TABLE_NAME, null, values);
+        Log.d(TAG, "addSearch: " + queryText + " saved at id " + returnId);
+        db.close();
+        return returnId;
+    }
+
+    public Cursor getSearches() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(SEARCH_LIST_TABLE_NAME, SEARCH_COLUMNS, null, null, null, null, SEARCH_COL_ID);
+    }
+
+    public void deleteSearch(int searchId) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(SEARCH_LIST_TABLE_NAME, SEARCH_COL_ID + " = ?", new String[]{String.valueOf(searchId)});
+        db.close();
+    }
+
+    public long addResult(int searchId, String beerName) {
+        ContentValues values = new ContentValues();
+        values.put(RESULTS_SEARCH_ID, searchId);
+        values.put(RESULTS_BEER_NAME, beerName);
+        SQLiteDatabase db = getWritableDatabase();
+        long returnId = db.insert(RESULTS_LIST_TABLE_NAME, null, values);
+        Log.d(TAG, "addResult: " + beerName + " saved at id " + returnId);
+        db.close();
+        return returnId;
+    }
+
+    public Cursor getResultsBySearchId(int searchId) {
+        SQLiteDatabase db = getReadableDatabase();
+        return db.query(RESULTS_LIST_TABLE_NAME, RESULTS_COLUMNS,
+                RESULTS_SEARCH_ID + " = ?",
+                new String[]{String.valueOf(searchId)},
+                null, null, RESULTS_COL_ID);
+    }
+
+    public void deleteResultsBySearchId(int searchId) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(RESULTS_LIST_TABLE_NAME, RESULTS_SEARCH_ID + " = ?", new String[]{String.valueOf(searchId)});
+        db.close();
     }
 }
