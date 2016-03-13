@@ -203,7 +203,7 @@ public class QuickTapSQLiteOpenHelper extends SQLiteOpenHelper {
         values.put(RESULTS_BEER_NAME, beerName);
         SQLiteDatabase db = getWritableDatabase();
         long returnId = db.insert(RESULTS_LIST_TABLE_NAME, null, values);
-        Log.d(TAG, "addResult: " + beerName + " saved at id " + returnId);
+        Log.d(TAG, "addResult: " + beerName + " with search id " + searchId + " saved at id " + returnId);
         db.close();
         return returnId;
     }

@@ -1,6 +1,7 @@
 package com.example.android.quicktap;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,6 +24,7 @@ public class ResultsListActivity extends AppCompatActivity {
     CursorAdapter mCursorAdapter;
     int mSearchId;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +35,7 @@ public class ResultsListActivity extends AppCompatActivity {
         mSearchId = (int) getIntent().getLongExtra(QuickTapSQLiteOpenHelper.RESULTS_SEARCH_ID, -1);
 
         //TODO - handle case where searchId = -1
+        //TODO - also stop making db calls on UI thread
         mHelper = new QuickTapSQLiteOpenHelper(ResultsListActivity.this);
         Cursor cursor = mHelper.getResultsBySearchId(mSearchId);
 
@@ -56,17 +58,35 @@ public class ResultsListActivity extends AppCompatActivity {
             public void bindView(View view, Context context, final Cursor cursor) {
                 TextView beerNameTextView = (TextView) view.findViewById(R.id.textViewSearchText);
 
-                String beerName = cursor.getString(cursor.getColumnIndex(QuickTapSQLiteOpenHelper.RESULTS_BEER_NAME));
+                final String beerName = cursor.getString(cursor.getColumnIndex(QuickTapSQLiteOpenHelper.RESULTS_BEER_NAME));
                 beerNameTextView.setText(beerName);
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //TODO - something...
-                        //save beerName to beer count table
+                        //adds to list
+                        Cursor cursor = mHelper.searchBeerList(beerName.toUpperCase());
+                        if (cursor.getCount() == 0) {
+                            mHelper.addDrink(beerName.toUpperCase(), "1");
+                        } else {
+                            int drinkCount = mHelper.getCountByName(beerName.toUpperCase());
+                            int mUpdatedCount = drinkCount + 1;
+                            mHelper.updateDrinkCount(mUpdatedCount, beerName.toUpperCase());
+                        }
+                        Toast.makeText(ResultsListActivity.this, beerName.toUpperCase() + " has been added!", Toast.LENGTH_SHORT).show();
+
+
                         //delete from Results table where searchId = mSearchId
+                        mHelper.deleteResultsBySearchId(mSearchId);
+
                         //delete from Search table where id = mSearchId
-                        //go to large text screen
+                        mHelper.deleteSearch(mSearchId);
+
+                        //opens large screen
+                        Intent intent = new Intent(ResultsListActivity.this, LargeDisplayActivity.class);
+                        intent.putExtra("BeerToDisplayKey", beerName);
+                        startActivity(intent);
                     }
                 });
             }

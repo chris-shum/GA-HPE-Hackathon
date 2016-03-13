@@ -210,18 +210,36 @@ public class MainActivity extends AppCompatActivity
 
         if (beers.size() > 0) {
             QuickTapSQLiteOpenHelper helper = QuickTapSQLiteOpenHelper.getInstance(MainActivity.this);
-            long searchId = helper.addSearch(queryText);
+            final long searchId = helper.addSearch(queryText);
             for (Beer beer : beers) {
                 helper.addResult((int) searchId, beer.getDisplayName());
             }
 
-            final Intent intent = new Intent(MainActivity.this, ResultsListActivity.class);
+            //launch notification that takes user to search results
+            Intent intent = new Intent(MainActivity.this, ResultsListActivity.class);
             intent.putExtra(QuickTapSQLiteOpenHelper.RESULTS_SEARCH_ID, searchId);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this)
+                    .setSmallIcon(R.drawable.ic_beer)
+                    .setContentTitle("QuickTap: New search results")
+                    .setContentText("Review results for \"" + queryText + "\"")
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
+            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            final int notificationId = (int) System.currentTimeMillis();
+            manager.notify(notificationId, builder.build());
 
             Snackbar snack = Snackbar.make(mCoordinatorLayout, "Search completed", Snackbar.LENGTH_LONG)
                     .setAction("View Search Results", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            NotificationManager manager =
+                                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                            manager.cancel(notificationId);
+
+                            Intent intent = new Intent(MainActivity.this, ResultsListActivity.class);
+                            intent.putExtra(QuickTapSQLiteOpenHelper.RESULTS_SEARCH_ID, searchId);
                             startActivity(intent);
                         }
                     });
@@ -231,18 +249,6 @@ public class MainActivity extends AppCompatActivity
             params.gravity = Gravity.CENTER;
             view.setLayoutParams(params);
             snack.show();
-
-            //launch notification that takes user to search results
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this)
-                    .setSmallIcon(R.drawable.ic_beer)
-                    .setContentTitle("QuickTap: New search results")
-                    .setContentText("Review results for \"" + queryText + "\"")
-                    .setContentIntent(pendingIntent)
-                    .setAutoCancel(true);
-            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            manager.notify((int) System.currentTimeMillis(), builder.build());
         } else {
             Toast.makeText(MainActivity.this, "No results. Sorry!", Toast.LENGTH_SHORT).show();
         }
