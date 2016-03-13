@@ -19,7 +19,6 @@ public class LargeDisplayActivity extends AppCompatActivity {
 
     ImageView mFBShare;
     ImageView mOrder;
-    ImageView mSearch;
     ImageView mAdd;
     QuickTapSQLiteOpenHelper mHelper;
     Toolbar mBottomToolbar;
@@ -51,7 +50,6 @@ public class LargeDisplayActivity extends AppCompatActivity {
         final ShareButton fbButton = (ShareButton)findViewById(R.id.fb_share_button);
         fbButton.setShareContent(builder.build());
         mOrder = (ImageView) findViewById(R.id.toolbarOrder);
-        mSearch = (ImageView) findViewById(R.id.toolbarSearch);
         mAdd = (ImageView) findViewById(R.id.toolbarAdd);
 
         mBottomToolbar = (Toolbar) findViewById(R.id.toolbar_bottom);
@@ -92,12 +90,6 @@ public class LargeDisplayActivity extends AppCompatActivity {
             }
         });
 
-        mSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
         mAdd.setOnClickListener(new View.OnClickListener() {
             @Override
