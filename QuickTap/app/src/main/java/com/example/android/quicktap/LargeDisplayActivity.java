@@ -36,7 +36,7 @@ public class LargeDisplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_large_display);
         mTopToolbar = (Toolbar) findViewById(R.id.toolbarLargeDisplayActivity);
-        //setSupportActionBar(mTopToolbar);
+        setSupportActionBar(mTopToolbar);
         setTitle("QuickTap");
         mTopToolbar.setTitleTextColor(getResources().getColor(R.color.colorIconBorder));
 
