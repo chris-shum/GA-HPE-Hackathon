@@ -9,10 +9,10 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
-public class LargeDisplayActivity extends AppCompatActivity implements AutoResizeTextView.OnTextResizeListener{
+public class LargeDisplayActivity extends AppCompatActivity { // implements AutoResizeTextView.OnTextResizeListener{
 
     String mBeerToDisplay;
-    AutoResizeTextView mAutoResizeTextView;
+//    AutoResizeTextView mAutoResizeTextView;
     final String DOUBLE_BYTE_SPACE = "\u3000";
 
 
@@ -24,8 +24,8 @@ public class LargeDisplayActivity extends AppCompatActivity implements AutoResiz
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mAutoResizeTextView = (AutoResizeTextView) findViewById(R.id.autoResizeTextView);
-        mAutoResizeTextView.resizeText();
+//        mAutoResizeTextView = (AutoResizeTextView) findViewById(R.id.autoResizeTextView);
+//        mAutoResizeTextView.resizeText();
 
 
 
@@ -46,13 +46,12 @@ public class LargeDisplayActivity extends AppCompatActivity implements AutoResiz
                 && android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
             fixString = DOUBLE_BYTE_SPACE;
         }
-        mAutoResizeTextView.setText(fixString + mBeerToDisplay + fixString);
-        mAutoResizeTextView.setTextSize(100);
+//        mAutoResizeTextView.setText(fixString + mBeerToDisplay + fixString);
 
     }
 
-    @Override
-    public void onTextResize(TextView textView, float oldSize, float newSize) {
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, newSize);
-    }
+//    @Override
+//    public void onTextResize(TextView textView, float oldSize, float newSize) {
+//        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, newSize);
+//    }
 }
