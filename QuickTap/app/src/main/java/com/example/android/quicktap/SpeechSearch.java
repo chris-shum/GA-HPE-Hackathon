@@ -155,7 +155,7 @@ public class SpeechSearch implements IHODClientCallback {
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 Log.d(TAG, "onResponse: beer api response received");
 
-                if (response.body().getBeers() != null
+                if (response.body() != null && response.body().getBeers() != null
                         && response.body().getBeers().size() > 0) {
                     Beer beer = response.body().getBeers().get(0);
 
