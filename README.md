@@ -5,4 +5,4 @@ QuickTap was awarded 2nd Place at the GA & [HPE Haven OnDemand](https://communit
 
 
 ##Screenshots:
- <img src="https://github.com/chris-shum/chris-shum.github.io/blob/master/img/portfolio/quicktap.jpg">
+ <img src="quicktap.jpg">
